@@ -1,0 +1,40 @@
+.ff-t-n-r {
+    font-family: "Times New Roman", Times, serif;
+  }
+  .ff-arial {
+    font-family: Arial;
+  }
+  .author {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .author i {
+    font-size: 14px;
+  }
+  
+  .author {
+    text-align: center;
+    text-transform: none;
+    margin-top: -70px;
+  }
+  
+  .avatar {
+    width: 124px;
+    height: 124px;
+    border: 5px solid #ffffff;
+    position: relative;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 5px;
+    background-color: snow;
+  }
+  .avatar.border-gray {
+    border-color: #eeeeee;
+  }
+  
+  .card-image {
+    border-radius: 4px;
+  }
