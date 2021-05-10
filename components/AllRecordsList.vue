@@ -91,15 +91,15 @@
           <div class="col-md-6">
             <div class="mt-3">
           <h5 class="h5 border-bottom pb-2">Who recorded this?</h5>
-          <div class="d-flex justify-content-center mt-1">
+          <div class="d-flex justify-content-between mt-1">
             <p class="text-muted">Full Name</p>
             <p class="text-muted">{{Record.Recorder.ProffName}} {{Record.Recorder.FullName}}</p>
           </div>
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-between">
             <p class="text-muted">Phone Number</p>
             <p class="text-muted">{{Record.Recorder.PhoneNo}}</p>
           </div>
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-between">
             <p class="text-muted">Email</p>
             <p class="text-muted">{{Record.Recorder.Email}}</p>
           </div>
