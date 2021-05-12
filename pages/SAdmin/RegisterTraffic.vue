@@ -68,7 +68,7 @@
                     name="gridRadios"
                     id="gridRadios2"
                     value="Female"
-                    v-model="TrafficGender"
+                    v-model="Traffic.Gender"
                   />
                   <label class="form-check-label" for="gridRadios2">
                     Female
