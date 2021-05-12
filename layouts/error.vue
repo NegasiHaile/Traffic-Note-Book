@@ -1,20 +1,23 @@
 <template>
   <div class="container mt-5">
     <div class="d-flex justify-content-center">
-      <h1 v-if="error.statusCode === 404">
+      <div class="card bg-danger">
+        <div class="card-body">
+          <h1 class="text-light" v-if="error.statusCode === 404">
         {{ error.statusCode }} Page not found
       </h1>
-      <h1 v-else>An error occurred {{error}}
-        <br>
-        {{ error.statusCode }}
+      <h1 class="text-light"  v-else>An error occurred 
+        
       </h1>
-    </div>
 
-    <div class="d-flex justify-content-center mt-4">
+      <div class="d-flex justify-content-center mt-4">
       <NuxtLink to="/" class="btn btn-sm btn-danger"
-        >Back to Home page</NuxtLink
+        >Back to login page</NuxtLink
       >
     </div>
+    </div>
+        </div>
+      </div>
   </div>
 </template>
 

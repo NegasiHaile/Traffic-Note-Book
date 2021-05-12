@@ -155,6 +155,7 @@ export default {
           }
           else{
           this.logInbutton = 'LogIn';
+          this.title= 'Connection bloked with your account!',
           this.alertMessage.message = 'This account is either it is blocked or something change made to it, So please contact the admin!';
           this.showModal();
           }

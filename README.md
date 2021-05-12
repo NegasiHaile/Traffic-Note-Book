@@ -1,20 +1,23 @@
-# traffic-note
+# Project Name: Traffic-Note-Book
 
-## Build Setup
+# Developed By: NEGASI HAILE
 
-```bash
-# install dependencies
-$ npm install
+# Tech Stack: Vue: NuxtJS and Firebase
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+# Project target: Road Traffic violation data recording notebook
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+# Actor: Administrators and traffics
 
-# generate static project
-$ npm run generate
-```
+# Adminstrator will give authorization to the traffics and they access the system.
+# And Traffics can use it as their note book and more
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+This project is targeted at what traffic can do with the hard notebook they use to record violations and crimes. And instead of using that notebook, just they can have a digital one in with this application and they can work everything simply and effectively.
+
+So what problems can solve this application.
+
+1, Data losing: Suppose what will happen if traffic has lost his notebook, every data recorded in it will be lost forever. But with the digital one once data is recorded it will lose.
+2, Data search: Data searching in a hard notebook is time-wasting. Ex, if one traffic needs to know what a vehicle has previous records he has to search over all the pages. But with this application only typing the vehicle plate is expected and it will list all related records.
+ 
+3,  Accessing data from everywhere
+
+
