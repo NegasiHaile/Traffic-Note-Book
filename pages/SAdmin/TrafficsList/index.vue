@@ -4,15 +4,21 @@
       <div class="card-header">
         <div class="d-flex justify-content-between">
           <h6 class="h6">List of Traffics</h6>
-          <p class="muted">{{ AccountsInfo.length }} toatl Traffics</p>
+          <p class="muted">{{ AccountsInfo.length }} Traffics</p>
         </div>
       </div>
       <div class="card-body" style="max-height: 500px; overflow-y: scroll">
-        <div class="card">
+          <b-input-group class="mb-2">
+          <b-form-input type="search" placeholder="Search for traffic" v-model="search"></b-form-input>
+          <b-input-group-append>
+            <b-button variant="info">Search</b-button>
+          </b-input-group-append>
+        </b-input-group>
           <div class="table-responsive">
             <table class="table table-sm table-hover" style="width: 100%">
               <thead>
                 <tr>
+                  <th scope="col">#</th>
                   <th scope="col">Proff Name</th>
                   <th scope="col">First Name</th>
                   <th scope="col">Middle Name</th>
@@ -25,18 +31,19 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="Traffic in AccountsInfo" :key="Traffic.Email">
-                  <td>{{ Traffic.ProffName }}</td>
-                  <td>{{ Traffic.FName }}</td>
-                  <td>{{ Traffic.MName }}</td>
-                  <td>{{ Traffic.LName }}</td>
-                  <td>{{ Traffic.Gender }}</td>
-                  <td>{{ Traffic.Responsibility }}</td>
-                  <td>{{ Traffic.PhoneNo }}</td>
-                  <td>{{ Traffic.Email }}</td>
+                <tr v-for="(Traffic, index) in AccountsInfo" :key="index">
+                  <td scope="row">{{ index + 1 }}</td>
+                  <td>{{ Traffic.data().ProffName }}</td>
+                  <td>{{ Traffic.data().FName }}</td>
+                  <td>{{ Traffic.data().MName }}</td>
+                  <td>{{ Traffic.data().LName }}</td>
+                  <td>{{ Traffic.data().Gender }}</td>
+                  <td>{{ Traffic.data().Responsibility }}</td>
+                  <td>{{ Traffic.data().PhoneNo }}</td>
+                  <td>{{ Traffic.data().Email }}</td>
                   <td class="d-flex justify-content-between">
                     <nuxt-link
-                      :to="`/SAdmin/TrafficsList/${Traffic.Email}`"
+                      :to="`/SAdmin/TrafficsList/${Traffic.data().Email}`"
                       class="btn btn-sm btn-outline-info"
                       >Detail</nuxt-link
                     >
@@ -51,7 +58,6 @@
               </tbody>
             </table>
           </div>
-        </div>
       </div>
     </div>
 
@@ -62,9 +68,10 @@
       button-size="sm"
     >
       <template #modal-title>
-        <small><a href="#" class="btn btn-sm btn-danger" v-if="AccountStatus == 'Active'"> Block Account</a>
-              
-              <a href="#" class="btn btn-sm btn-primary" v-else> Activate Account</a></small>
+        <small><a href="#" class="btn btn-sm btn-danger" v-if="AccountStatus == 'Active'"
+         @click="blockAcountModal('bv-modal-update-AccountStatus')"> Block Account</a>
+        <a href="#" class="btn btn-sm btn-info" v-else
+         @click="activateAcountModal('bv-modal-update-AccountStatus')"> Activate Account</a></small>
       </template>
       <template #default="{}">
         <form class="row">
@@ -163,7 +170,7 @@
                 required
               />
             </div>
-            <div class="col-md-6 mt-3">
+            <div class="col-md-6 mt-3 d-none">
               <input
                 type="email"
                 class="form-control"
@@ -173,7 +180,7 @@
                 required
               />
             </div>
-            <div class="col-12 mt-3">
+            <div class="col-md-6 mt-3">
               <input
                 type="text"
                 class="form-control"
@@ -195,15 +202,33 @@
         <b-button  class="btn-sm ml-2" variant="info" @click="svae_TrafficDetaile_Changes"
           >Save changes</b-button
         >
-        <b-button class="btn-sm ml-2" variant="secondary" @click="hideModal()"
+        <b-button class="btn-sm ml-2" variant="secondary" @click="hideModal('bv-modal-Edit-traffic-Detail')"
           >Cancel</b-button
         >
       </template>
     </b-modal>
+
+    <b-modal id="bv-modal-update-AccountStatus" modal-class="sucess" title="Down Defiant" button-size="sm">
+    <template #modal-title>
+      <h6>{{modalMessage.title}}?</h6>
+    </template>
+    <template #default="{ }">
+      <small><b>N.B: </b>{{modalMessage.message}}
+      </small>
+    </template>
+
+    <template #modal-footer="{ }">
+          
+          <b-button class="btn-sm ml-2" variant="danger" v-if="AccountStatus == 'Active'" @click="updateAccountStatus('bv-modal-update-AccountStatus', 'Blocked')">YES</b-button>
+          <b-button class="btn-sm ml-2" variant="success" v-else @click="updateAccountStatus('bv-modal-update-AccountStatus', 'Active')">YES</b-button>
+          <b-button class="btn-sm ml-2" variant="secondary" @click="hideModal('bv-modal-update-AccountStatus')">NO</b-button>
+    </template>
+  </b-modal>
   </div>
 </template>
 <script>
 import firebase from 'firebase/app'
+var fsDB = firebase.firestore();
 export default {
   data() {
     return {
@@ -214,7 +239,10 @@ export default {
       ActiveTraffic: null,
       AccountStatus: null,
 
-      alertMessage:{
+      search: '',
+
+      modalMessage:{
+          title: '',
           message: '',
       },
     }
@@ -225,6 +253,7 @@ export default {
 
   methods: {
     fetchTraffics() {
+       this.AccountsInfo = [],
       firebase
         .firestore()
         .collection('AccountsInfo')
@@ -232,35 +261,77 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             if (doc.data().AccountType == 'Traffic') {
-              this.AccountsInfo.push(doc.data())
+              this.AccountsInfo.push(doc)
             }
           })
         })
     },
+  computed:{
+    searchTraffics(){
+      return this.AccountsInfo.filter((trfc) => {
+        return trfc.data().FName.match(this.search);
+        //  || traffic.data().PhoneNo.toLowerCase().includes(this.search.toLowerCase()
+        // ) || traffic.data().Email.toLowerCase().includes(this.search.toLowerCase()) ;
+      })
+    }
+  },
 
     svae_TrafficDetaile_Changes(){
       this.hideModal();
-        //  alert(this.ActiveTraffic)
-        var trafficUpdate = firebase.firestore().collection("AccountsInfo").doc(this.Traffic.Email);
+        var trafficUpdate = fsDB.collection("AccountsInfo").doc(this.ActiveTraffic);
         
         return trafficUpdate.update(this.Traffic)
         .then(() => {
-            alert("Document successfully updated!");
+          this.fetchTraffics();
+          this.hideModal('bv-modal-Edit-traffic-Detail');
         })
         .catch((error) => {
-            alert(error);
+            alert(error); 
+        });
+    },
+    
+    updateAccountStatus(modalId, change){
+        var blockTrafficAccount = fsDB.collection("AccountsInfo").doc(this.ActiveTraffic);
+
+        return blockTrafficAccount.update({
+            AccountStatus: change
+        })
+        .then(() => {
+            this.fetchTraffics();
+            this.hideModal(modalId);
+        })
+        .catch((error) => {
+            this.modalMessage.title = "Something went wrong, Please try again!"
+            this.modalMessage.message = error;
         });
     },
 
     showEiditTrafficModal(Traffic) {
       this.$bvModal.show('bv-modal-Edit-traffic-Detail');
-      this.Traffic = Traffic;
+      this.Traffic = Traffic.data();
+      this.ActiveTraffic = Traffic.id;
       this.AccountStatus = this.Traffic.AccountStatus;
-      this.ActiveTraffic = this.Traffic.Email;
     },
 
-    hideModal() {
-      this.$bvModal.hide('bv-modal-Edit-traffic-Detail')
+    blockAcountModal(modalId){
+      this.modalMessage.title = "Are you sure you want to block this account!"
+      this.modalMessage.message = "Bolcking traffic account is disabling the account of traffic purposed not to access the service of this application at all."
+      this.showModal(modalId)
+    },
+
+    activateAcountModal(modalId){
+      this.modalMessage.title = "Are you sure you want to Activate this account!"
+      this.modalMessage.message = "Activateting an account is allowing a previously blocked taffic account to access, make change or add somthing to this application."
+      this.showModal(modalId)
+    },
+    
+
+    showModal(modalId){
+      this.$bvModal.show(modalId);
+    },
+
+    hideModal(moadalId) {
+      this.$bvModal.hide(moadalId)
     },
   },
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="card footer mt-3 pt-2 pb-1">
         <div>
-            <p class="text-center">Copy-Right 2021, Powerd by Ethiopian Traffic</p>
+            <p class="text-center">&copy; Copy-right 2021, Traffic police office of Ethiopia</p>
         </div>
     </div>
 </template>

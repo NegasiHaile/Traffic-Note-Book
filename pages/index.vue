@@ -1,13 +1,10 @@
 <template>
 <!-- This is log in page -->
-  <div class="container" style="margin-top: 90px">
-    <div class="mb-5">
-      <!-- <p class="h4 text-center">WELCOME</p> -->
-    </div>
-    <br />
-    <div class="d-flex justify-content-center">
-      
-      <div class="col-12 col-md-8">
+  <div class="container-filud" style="margin-top: 90px">
+    <div class="col-12">
+      <div class="d-flex justify-content-center">
+
+        <div class="col-12 col-md-6">
         <div class="card shadow-lg">
           <div class="author">
             <a class="text-uppercase text-primary">
@@ -65,7 +62,7 @@
 
               <div class="d-flex justify-content-center">
                 <div class="col-10 col-md-8">
-                  <button type="submit" class="btn btn-primary w-100">Login</button>
+                  <button type="submit" class="btn btn-primary w-100">{{logInbutton}}</button>
                 </div>
               </div>
             </form>
@@ -77,14 +74,21 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="mb-2">
-      <p class="title">Traffic-Note-Book</p>
-    </div>
+      </div>
+      
+      <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-6">
+        <p class="title tnb-font">Traffic-Note-Book</p>
+        <p class="tnb-font">This application belongs to the Ethiopian Traffic police office
+           which is purposed to manage road traffic violations, crimes, collisions, and other records.
+        </p>
+      </div>
+      </div>
 
+    
     <b-modal id="bv-modal-downDefiant-warning" centered title="Down Defiant" button-size="sm">
     <template #modal-title>
-      <h6>Somthing went wrong, Try again?</h6>
+      <h6>{{alertMessage.title}}</h6>
     </template>
     <template #default="{ }">
       <small>{{alertMessage.message}}
@@ -96,6 +100,9 @@
          <b-button class="btn-sm ml-2" variant="danger" @click="hideModal()">Close</b-button>
     </template>
   </b-modal>
+
+
+  </div>
   </div>
 </template>
 
@@ -111,13 +118,19 @@ export default {
       user: '',
       users: '',
 
+      accountType: '',
+      accountStatus: '',
+
+      logInbutton: 'LogIn',
+
       alertMessage:{
+          title: 'Somthing went wrong, Try again!',
           message: '',
       },
     };
   },
 
-  mounted(){
+  created(){
     firebase.auth().onAuthStateChanged(user =>{
       this.user = user;
     }),
@@ -130,19 +143,23 @@ export default {
   },
   methods: {
     logIN(){
-      
+      this.logInbutton = 'Processing ...';
+      this. TypeOfAccount();
       if(this.userName && this.passWord){
         firebase.auth().signInWithEmailAndPassword(this.userName, this.passWord).then(user => {
-          if(this.TypeOfAccount() == "Traffic"){
+          if(this.accountType == "Traffic" && this.accountStatus == 'Active'){
             this.$router.push('/traffic');
           }
-          else if(this.TypeOfAccount() == "Admin"){
+          else if(this.accountType == "Admin" && this.accountStatus == 'Active'){
             this.$router.push('/SAdmin');
           }
           else{
-             this.$router.push('/');
+          this.logInbutton = 'LogIn';
+          this.alertMessage.message = 'This account is either it is blocked or something change made to it, So please contact the admin!';
+          this.showModal();
           }
         }).catch(err =>{
+          this.logInbutton = 'LogIn';
           this.alertMessage.message = err;
           this.showModal();
         })
@@ -154,8 +171,10 @@ export default {
     },
     
     forgotPassword(){
-      firebase.auth().sendPasswordResetEmail(this.userName).then(function(){
-        alert('Reset password is sent to your email');
+      firebase.auth().sendPasswordResetEmail(this.userName).then(() => {
+          this.alertMessage.title= 'Done !',
+          this.alertMessage.message = 'Reset password is sent to your email, Please go a head and reset it from there!';
+          this.showModal();
       }).catch(err => {
          this.alertMessage.message = err;
           this.showModal();
@@ -163,14 +182,15 @@ export default {
     },
 
    TypeOfAccount(){
-     var Accounts = this.$store.state.AccountsInfo
-     var index = Accounts.findIndex(Account => Account.Email == this.userName)
+     var Accounts = this.$store.state.AccountsInfo;
+     var index = Accounts.findIndex(Account => Account.Email == this.userName);
 
      if(index >= 0){
-       return (Accounts[index].AccountType);
+       this.accountType= Accounts[index].AccountType;
+       this.accountStatus = Accounts[index].AccountStatus;
+      //  return (Accounts[index].AccountType);
      }
      else{
-       return ("Admin");
      }
      
     },
@@ -189,8 +209,6 @@ export default {
 
 <style>
 .title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 60px;
@@ -198,7 +216,11 @@ export default {
   letter-spacing: 1px;
   text-align: center;
 }
-.footer {
-  min-height: 800px;
+.tnb-font{
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+/* .footer {
+  min-height: 800px;
+} */
 </style>

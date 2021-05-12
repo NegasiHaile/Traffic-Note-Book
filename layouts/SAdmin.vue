@@ -2,7 +2,7 @@
   <div>
     <div style="min-height: 540px;">
     <b-navbar toggleable="lg" type="dark" variant="info" class="p-3 fixed-top">
-      <b-navbar-brand href="/SAdmin/" class="logo"><b>Traffic-Note</b></b-navbar-brand>
+      <b-navbar-brand to="/SAdmin/" class="logo"><b>Traffic-Note</b></b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -15,7 +15,7 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right>
+          <b-nav-item-dropdown v-if="adminLevel != 'First-Level'" right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
               <em>Traffics</em>
@@ -32,12 +32,12 @@
             <template #button-content>
               <em>Account</em>
             </template>
-            <b-dropdown-item><nuxt-link :to="`/SAdmin/Admins/${user.email}`">Profile</nuxt-link> </b-dropdown-item>
+            <b-dropdown-item><nuxt-link class="nav-item" :to="`/SAdmin/Admins/${user.email}`">Profile</nuxt-link> </b-dropdown-item>
             <b-dropdown-item to="/SAdmin/ChangePassword">Change password</b-dropdown-item
             >
             <li><hr class="dropdown-divider" /></li>
-            <b-dropdown-item to="/SAdmin/AddNewAdmin">Add new Admin</b-dropdown-item>
-            <b-dropdown-item to="/SAdmin/Admins/">Allowed Admins</b-dropdown-item>
+            <b-dropdown-item to="/SAdmin/AddNewAdmin" v-if="adminLevel == 'Super-Level'">Add new Admin</b-dropdown-item>
+            <b-dropdown-item to="/SAdmin/Admins/" v-if="adminLevel == 'Super-Level'">Allowed Admins</b-dropdown-item>
             <li><hr class="dropdown-divider" /></li>
             <b-dropdown-item href="#" class="text-center"
              @click="signOut" >Sign Out</b-dropdown-item
@@ -46,7 +46,6 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-
     <Nuxt />
     </div>
     <Footer />
@@ -59,15 +58,42 @@ import 'firebase/auth'
 export default {
   data(){
       return{
-        user: '',
+        user: [],
+        userInfo: [],
+        adminLevel: '',
       }
   },
-  mounted(){
-    firebase.auth().onAuthStateChanged(user =>{
-      this.user = user;
-    })
+  created(){
+    this.loggedInUser();
+    // this.fetchLogeduserInfo();
+    // alert(this.adminLevel)
   },
   methods:{
+
+    loggedInUser(){
+      firebase.auth().onAuthStateChanged(user =>{
+        this.user = user;
+        this.fetchLogeduserInfo()
+        // console.log(this.adminLevel)
+      })
+    },
+    fetchLogeduserInfo(){
+      
+      firebase
+        .firestore()
+        .collection('AccountsInfo')
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            if (doc.data().Email == this.user.email) {
+              // console.log("fail or Done!"+ this.user.email)
+              this.userInfo = doc.data();
+              this.adminLevel = doc.data().Responsibility
+            }
+          })
+        })
+    },
+
     signOut(){
       firebase.auth().signOut().then(result => {
         this.user = '';

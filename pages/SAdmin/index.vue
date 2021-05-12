@@ -1,11 +1,30 @@
 <template>
   <div class="container-fluid mt-5">
-    <div class="col-12 mb-5">
-      <p class="text-center">
-        Welcome: <nuxt-link to="#">Inspectore NEGASI HAILE</nuxt-link> You have
-        accessed the admin area.
-      </p>
-    </div>
+     <br />
+      <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-8">
+          <div class="card shadow-sm bg-info">
+            <div class="card-body">
+              <div class="d-flex justify-content-center">
+                <div class="col-10">
+                  <div class="mt-5">
+                    <h5 class="text-center text-light"> {{ logedInAdmin.email }}</h5>
+                    <h6 class="text-center mt-2"> Welcome: you have logged in as Adminstrator</h6>
+                  </div>
+                  <p class="text-center text-light mt-3">
+                    As long as you accessed this application as an administrator you have, you have 
+                    a hard responsibility, so be careful for these. Especially who  you are allowing to access this 
+                    system.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <br />
+      <br />
     <div class="col-12">
       <div class="border-bottom mb-2">
         <h4 class="texr-start">Dashboard</h4>
@@ -91,31 +110,15 @@
           </div>
         </div>
         <div class="col-md-4 mt-3">
-          <div class="col-12">
-            <div class="card">
-              <div class="border-bottom p-2">
-                <h6 class="text-center">10 most recent records</h6>
-              </div>
-              <div class="card-body">
-                <p class="text muted" v-for='(recrd, index) in Records' :key='index'>
-                  {{index}} 
-                  <nuxt-link to="#"
-                    >: <span class="text-danger">{{recrd.Catagory}}</span>/ {{recrd.Discription}}</nuxt-link
-                  >
-                </p>
-              </div>
-            </div>
-          </div>
-
           <div class="col-12 mt-3">
             <div class="card">
               <div class="border-bottom p-2">
-                <h6 class="text-center">10 Recent & Active Deviants</h6>
+                <h6 class="text-center">Active and Recent Deviants</h6>
               </div>
               <div class="card-body">
                 <p class="text muted" v-for='(deviant, index) in Deviants' :key='index'>
                   {{index}} 
-                  <nuxt-link to="#"
+                  <nuxt-link :to="`/SAdmin/Deviants/${deviant.id}`"
                     >: <span class="text-danger">{{deviant.Subject}}</span>/  {{deviant.Discription}}</nuxt-link
                   >
                 </p>
@@ -125,6 +128,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -137,15 +141,22 @@ export default {
             Traffics: [],
             Admins: [],
             Records: [],
-            Deviants: []
+            Deviants: [],
+            logedInAdmin: [],
             
         }
     },
-mounted(){
+  created(){
+    this.loggedInUser()
     this.accountsAmount()
     this.recordsData()
 },
   methods: {
+    loggedInUser(){
+      firebase.auth().onAuthStateChanged(user =>{
+        this.logedInAdmin = user;
+      })
+    },
     accountsAmount() {
       firebase
         .firestore()
@@ -178,7 +189,9 @@ mounted(){
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
+            if(doc.data().Status == 'Active'){
              this.Deviants.push(doc.data())
+            }
           })
         })
     },

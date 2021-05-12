@@ -48,7 +48,7 @@
                 required>
                 <option value="unassigned" disabled selected>Proffessional name</option>
                 <option value="Sagin">Sagin</option>
-                <option value="Vice Sagine">Vice Sagin</option>
+                <option value="Vice Sagin">Vice Sagin</option>
                 <option value="Constable">Constable</option>
                 <option value="Inspector">Inspector</option>
                 <option value="Vice Inspector">Vice Inspector</option>
@@ -117,7 +117,7 @@
                       type="radio"
                       name="Responsibility"
                       id="gridRadios1"
-                      value="FirstLevel"
+                      value="First-Level"
                       v-model="Admin.Responsibility"
                       checked
                     />
@@ -131,7 +131,7 @@
                       type="radio"
                       name="Responsibility"
                       id="gridRadios2"
-                      value="SecondLevel"
+                      value="Second-Level"
                       v-model="Admin.Responsibility"
                     />
                     <label class="form-check-label" for="gridRadios2">
@@ -144,7 +144,7 @@
                       type="radio"
                       name="Responsibility"
                       id="gridRadios2"
-                      value="SuperLevel"
+                      value="Super-Level"
                       v-model="Admin.Responsibility"
                     />
                     <label class="form-check-label" for="gridRadios2">
@@ -176,7 +176,7 @@
               <div class="col-12">
                 <div class="d-flex justify-content-center">
                   <div class="col-8 col-md-6">
-                    <button type="submit" class="btn btn-info w-100">Add Admin Detail</button>
+                    <button type="submit" class="btn btn-info w-100">{{saveAdminDetailbtn}}</button>
                   </div>
                 </div>
               </div>
@@ -239,6 +239,7 @@ export default {
         Password: 'Traffic@123',
         AccountsInfo: [],
 
+        saveAdminDetailbtn: 'Save Admin Detail',  
         alrtTyp:{
           dsply: 'd-none',
           type: 'alert-success',
@@ -252,7 +253,7 @@ export default {
 
   methods:{
     addNewAdmin(){
-
+      this.saveAdminDetailbtn = 'Saving ...'
       this.getcurrentDate();
       var accountIndex = this.AccountsInfo.findIndex(Account => Account.Email == this.Admin.Email)
 
@@ -270,11 +271,13 @@ export default {
               }).then(() =>{
                 this.resetfields()
                 this.CheckAccount();
+                this.saveAdminDetailbtn = 'Save Admin Detail';
                 this.alrtTyp.dsply= 'd-block',
                 this.alrtTyp.type= 'alert-success',
                 this.alrtTyp.message= 'Adminstrator have been registered successfuly!'
               }).catch(err=> {
                 this.CheckAccount();
+          this.saveAdminDetailbtn = 'Save Admin Detail';
                 this.alrtTyp.dsply= 'd-block',
                 this.alrtTyp.type= 'alert-danger',
                 this.alrtTyp.message= err
@@ -282,6 +285,7 @@ export default {
         }
         else{
           this.CheckAccount();
+          this.saveAdminDetailbtn = 'Save Admin Detail';
           this.alrtTyp.dsply = 'd-block';
           this.alrtTyp.type = 'alert-danger';
           this.alrtTyp.message = "There is an account with this email, please use another email!";

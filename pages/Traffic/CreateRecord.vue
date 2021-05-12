@@ -78,7 +78,7 @@
             <div class="col-12">
               <div class="d-flex justify-content-center">
                 <div class="col-10 col-md-3 mt-3">
-                  <button type="submit" class="btn btn-info w-100">Save Record</button>
+                  <button type="submit" class="btn btn-info w-100">{{saveRecordBtn}}</button>
                 </div>
               </div>
             </div>
@@ -95,7 +95,7 @@ export default {
   data() {
     return {
       NewRecord:{
-          id: this.generateId(),
+          id: '',
           Plate: '',
           Licens: '',
           Location: '',
@@ -112,6 +112,8 @@ export default {
       },
 
       logedin: '',
+
+      saveRecordBtn: 'Save Record',
 
       alrtTyp:{
           dsply: 'd-none',
@@ -139,14 +141,18 @@ export default {
 
   methods:{
     createRecord(){
+      this.saveRecordBtn = 'Saveing...';
+      this.generateId();
       this.TrafficDtail();
         firebase.firestore().collection("Records").add(this.NewRecord).then((res) =>{
             this.resetfields()
            }).then(() =>{
+             this.saveRecordBtn = 'Save Record';
               this.alrtTyp.dsply= 'd-block',
               this.alrtTyp.type= 'alert-success',
               this.alrtTyp.message= 'This record is added to the database successfuly'
            }).catch(err => {
+             this.saveRecordBtn = 'Save Record';
               this.alrtTyp.dsply= 'd-block',
               this.alrtTyp.type= 'alert-danger',
               this.alrtTyp.message= err
@@ -170,7 +176,7 @@ export default {
         for (var i = 0, n = charset.length; i < length; ++i) {
           retVal += charset.charAt(Math.floor(Math.random() * n));
           }
-          return retVal;
+          this.NewRecord.id = retVal;
     },
 
     resetfields(){

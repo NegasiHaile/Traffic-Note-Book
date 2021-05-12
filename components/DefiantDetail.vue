@@ -2,39 +2,39 @@
   <div class="container">
     <div class="d-flex justify-content-center">
       <div class="col-12 col-md-6">
-        <div class="card shadow lg" v-for="dfnt in Defiant" :key="dfnt.id">
+        <div class="card shadow lg" v-for="(dfnt, index) in Defiant" :key="index">
           <div class="card-header">
             <div class="d-flex justify-content-between">
                 <h6>Record ID: <b>{{ $route.params.id }}</b></h6> 
                 <small v-if="defiantStatus == 'Active'">
                     <button id="show-btnu" class="btn btn-sm btn-danger" 
-                @click="$bvModal.show('bv-modal-downDefiant-warning')" >
+                @click="showConfModal(dfnt,'bv-modal-downDefiant-warning')" >
                 Down this Defiant</button>
                 </small>
-                <small v-else><p> Status: <b>{{dfnt.Status}}</b></p></small>
+                <small v-else><p> Status: <b>{{dfnt.data().Status}}</b></p></small>
             </div>
           </div>
           <div class="card-body">
             <div>
                 <div class="d-flex justify-content-between">
                 <p>* Vehcle plate (Identifier):</p>
-                <b>{{ dfnt.Plate }}</b>
+                <b>{{ dfnt.data().Plate }}</b>
               </div>
               <div class="d-flex justify-content-between">
                 <p>* Subject of this record:</p>
-                <b>{{ dfnt.Subject }}</b>
+                <b>{{ dfnt.data().Subject }}</b>
               </div>
               <div class="d-flex justify-content-between">
                 <p>* Where this is happen:</p>
-                <b>{{ dfnt.Location }}</b>
+                <b>{{ dfnt.data().Location }}</b>
               </div>
               <div class="border-bottom d-flex justify-content-between">
                 <p>* When is this Recorded:</p>
-                <b>{{ dfnt.RecoredDate }}</b>
+                <b>{{ dfnt.data().RecoredDate }}</b>
               </div>
                 <div class="d-block mt-1">
                     <h6>* Discription (reason) of the record</h6>
-                    <p>{{dfnt.Discription}}</p>
+                    <p>{{dfnt.data().Discription}}</p>
               </div>
                 <div class="border-bottom mt-4">
                     <h5 class="text-center">Who Exposed this Defiant</h5>
@@ -42,13 +42,13 @@
               <div class="mt-2">
                   <div class="mt-2">
                           <div class="d-flex justify-content-between">
-                              <p>* Full name</p><p><b><i>{{dfnt.Recorder.ProffName}}</i></b> {{dfnt.Recorder.FullName}}</p>
+                              <p>* Full name</p><p><b><i>{{dfnt.data().Recorder.ProffName}}</i></b> {{dfnt.data().Recorder.FullName}}</p>
                           </div>
                           <div class="d-flex justify-content-between">
-                              <p>* Phone Number</p><p>{{dfnt.Recorder.PhoneNo}}</p>
+                              <p>* Phone Number</p><p>{{dfnt.data().Recorder.PhoneNo}}</p>
                           </div>
                           <div class="d-flex justify-content-between">
-                              <p>* Email </p><p>{{dfnt.Recorder.Email}}</p>
+                              <p>* Email </p><p>{{dfnt.data().Recorder.Email}}</p>
                           </div>
                   </div>
               </div>
@@ -89,7 +89,8 @@ export default {
   data() {
     return {
       Defiant: [],
-      defiantStatus: ''
+      defiantStatus: '',
+      defiantDocId: '',
     }
   },
   created() {
@@ -105,7 +106,7 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             if (doc.data().id == this.$route.params.id) {
-              this.Defiant.push(doc.data())
+              this.Defiant.push(doc)
               this.defiantStatus = doc.data().Status
             }
           })
@@ -113,20 +114,22 @@ export default {
     },
 
     downDefiant(){
-
-        var definatid = firebase.firestore().collection("deviants").doc(this.$route.params.id);
-
+        var definatid = firebase.firestore().collection("deviants").doc(this.defiantDocId);
         return definatid.update({
             Status: 'Down'
         })
         .then(() => {
-            // alert("Document successfully updated!");
             this.hideModal()
             this.fetchDefiant()
         })
         .catch((error) => {
             alert( error);
         });
+    },
+
+    showConfModal(Defaint, modalId){
+      this.defiantDocId = Defaint.id;
+      this.$bvModal.show(modalId)
     },
 
     hideModal(){

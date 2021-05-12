@@ -9,8 +9,13 @@
           <p class="text-light">{{ Records.length }} Total Records</p>
         </div>
       </div>
-      <div class="card-body" style="max-height: 500px; overflow-y: scroll">
-        <div class="card">
+      <div class="card-body" style="max-height: 550px; overflow-y: scroll">
+        <b-input-group class="mb-2">
+          <b-form-input type="search" placeholder="Search for record" v-model="search"></b-form-input>
+          <b-input-group-append>
+            <b-button variant="info">Search</b-button>
+          </b-input-group-append>
+        </b-input-group>
           <div class="table-responsive">
             <table class="table table-sm table-hover" style="width: 100%">
               <thead>
@@ -26,7 +31,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(Record, index) in Records" :key="index">
+                <tr v-for="(Record, index) in searchRecords" :key="index">
                   <th scope="row">{{ index + 1 }}</th>
                   <td>{{ Record.Plate }}</td>
                   <td>{{ Record.Licens }}</td>
@@ -41,7 +46,6 @@
               </tbody>
             </table>
           </div>
-        </div>
       </div>
       <div class="card-footer"></div>
     </div>
@@ -118,7 +122,9 @@ export default {
   data() {
     return {
       Records: [],
-      Record:[]
+      Record:[],
+      
+      search: '',
     }
   },
 
@@ -126,11 +132,15 @@ export default {
     this.fetchRecords()
   },
 
-  // computed: {
-  //   Records() {
-  //     return this.$store.state.Records
-  //   },
-  // },
+    computed:{
+    searchRecords(){
+      return this.Records.filter((record) => {
+        return record.Plate.toLowerCase().includes(this.search.toLowerCase()
+        ) || record.Licens.toLowerCase().includes(this.search.toLowerCase()
+        ) || record.Catagory.toLowerCase().includes(this.search.toLowerCase()) ;
+      })
+    }
+  },
   methods: {
     fetchRecords() {
       firebase

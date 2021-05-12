@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AllDeviantsList />
+        <DefiantDetail/>
     </div>
 </template>
 

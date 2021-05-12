@@ -7,31 +7,29 @@
         class="p-3 fixed-top"
       >
         <b-navbar-brand class="logo"><b><nuxt-link class="nav-item text-light l-item" to="/Traffic">Traffic-Note</nuxt-link></b></b-navbar-brand>
-          <b-navbar-brand class="defiantIcon"><b>
-            <nuxt-link class="nav-item text-light notification" to="/Traffic">{{ActiveDeviants.length}}</nuxt-link></b>
-            </b-navbar-brand>
+          
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-              <!-- <nuxt-link class="nav-item" to="/Traffic">Home</nuxt-link> -->
-            <b-nav-item><nuxt-link class="nav-item text-light l-item" to="/Traffic">Home</nuxt-link></b-nav-item>
-            <b-nav-item-dropdown text="Deviants" right>
-              <nuxt-link class="dropdown-item" to="/Traffic/ExposeDefiant">Expose Defiant</nuxt-link>
-              <li><hr class="dropdown-divider" /></li>
-              <!-- <b-dropdown-item :to="'/Traffic/Deviants/' + 'Active'">Active Deviants</b-dropdown-item>
-              <b-dropdown-item :to="'/Traffic/Deviants/' + 'Down'">Down Deviants</b-dropdown-item> -->
-              <li><hr class="dropdown-divider" /></li>
-              <nuxt-link class="dropdown-item" to="/traffic/Deviants">Deviants list</nuxt-link>
-            </b-nav-item-dropdown>
+            <b-nav-item to="/Traffic">Home</b-nav-item>
             
             <b-nav-item-dropdown text="Records" right>
-              <nuxt-link class="dropdown-item" to="/traffic/CreateRecord">Make Record</nuxt-link>
+              <b-dropdown-item class="dropdown-item" to="/traffic/CreateRecord">Make Record</b-dropdown-item>
               <li><hr class="dropdown-divider" /></li>
               <li><hr class="dropdown-divider" /></li>
-              <nuxt-link class="dropdown-item" to="/traffic/Records">Records List</nuxt-link>
+              <b-dropdown-item class="dropdown-item" to="/traffic/Records">Records List</b-dropdown-item>
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown text="Deviants" right>
+              <b-dropdown-item class="dropdown-item" to="/Traffic/ExposeDefiant">Expose Defiant</b-dropdown-item>
+              <li><hr class="dropdown-divider" /></li>
+              <li><hr class="dropdown-divider" /></li>
+              <b-dropdown-item class="dropdown-item" to="/traffic/Deviants">Deviants list</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
+          <b-navbar-brand title="Active Deviants"><b>
+            <a href="#" v-b-toggle.sidebar-right class="nav-item notification" to="/Traffic">{{ActiveDeviants.length}}</a></b>
+            </b-navbar-brand>
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
@@ -40,8 +38,8 @@
               <template #button-content>
                 <em>{{user.email}}</em>
               </template>
-              <nuxt-link class="dropdown-item" :to="`/Traffic/${user.email}`">Profile</nuxt-link>
-              <nuxt-link class="dropdown-item" to="/Traffic/ChangePassword">Change password</nuxt-link>
+              <b-dropdown-item class="dropdown-item" :to="`/Traffic/${user.email}`">Profile</b-dropdown-item>
+              <b-dropdown-item class="dropdown-item" to="/Traffic/ChangePassword">Change password</b-dropdown-item>
               
               <li><hr class="dropdown-divider" /></li>
               <b-dropdown-item href="#" class="text-center"
@@ -57,6 +55,20 @@
     <div class="mt-2">
       <Footer />
     </div>
+    <div>
+                <b-sidebar id="sidebar-right" title="Active Deviants" sidebar-class="border-right border-danger"  right shadow>
+                <div class="px-3 py-2">
+                    <div class="border-bottom mb-2">
+                        <p>Active defiant is: Someone made a violation but escaped.</p>
+                    </div>
+                    <div class="mt-2 border-bottom" v-for="(actvDfynt, index) in ActiveDeviants" :key="index">
+                        <h6 class="text-muted">{{actvDfynt.Subject}}/ {{actvDfynt.RecordDate}}</h6>
+                        <nuxt-link :to="`/Traffic/Deviants/${actvDfynt.id}`"> {{actvDfynt.Discription}}</nuxt-link>
+                    </div>
+                    
+                </div>
+                </b-sidebar>
+            </div>
   </div>
 </template>
 
@@ -71,7 +83,7 @@ export default {
       }
   },
     
-  mounted(){
+  created(){
     firebase.auth().onAuthStateChanged(user =>{
       this.user = user;
     }),
@@ -111,14 +123,20 @@ export default {
   text-decoration: none;
 }
   .notification {
-  background-color: rgb(212, 79, 79);
-  color: white;
-  text-decoration: none;
-  padding: 4px 12px;
-  position: relative;
-  display: inline-block;
-  border-radius: 50%;
-  text-decoration: none;
+    color: rgb(253, 62, 62);
+    background-color: rgb(238, 238, 238);
+    text-decoration: none;
+    padding: 4px 12px;
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    border: none;
+    text-decoration: none;
+}
+.notification:hover{
+  
+    color: rgb(238, 238, 238);
+    background-color: rgb(211, 88, 88);
 }
 
 </style>
