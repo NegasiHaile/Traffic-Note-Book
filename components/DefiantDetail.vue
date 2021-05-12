@@ -85,7 +85,12 @@
 <script>
 import firebase from 'firebase/app'
 export default {
-  // loading: true,
+  // head(){
+  //   return{
+  //     title: `${this.Defaint.data().Subject} -Traffic-Note-Book`,
+  //   }
+    
+  // },
   data() {
     return {
       Defiant: [],

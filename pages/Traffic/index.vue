@@ -146,6 +146,9 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 export default {
   layout: 'Traffic',
+  head:{
+    title: 'Traffic Area - Traffic Note Book'
+  },
 
   data() {
     return {

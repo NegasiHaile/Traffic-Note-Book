@@ -78,6 +78,9 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 
 export default {
+  head:{
+    title: 'Expose Defiant - Traffic Note Book'
+  },
   data() {
     return {
       NewDefiant: {

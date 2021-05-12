@@ -92,6 +92,10 @@
 <script>
 import firebase from 'firebase/app';
 export default {
+
+  head:{
+    title: 'Record violation - Traffic Note Book'
+  },
   data() {
     return {
       NewRecord:{

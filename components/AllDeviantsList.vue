@@ -52,6 +52,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 export default {
+  head:{
+    title: 'Deviants-list Traffic-Note-Book'
+  },
   data() {
     return {
       Deviants: [],

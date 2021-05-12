@@ -110,6 +110,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 export default {
+  head:{
+      title: 'LogIn-Traffic-Note-Book',
+  },
   data() {
     return {
       userName: '',
@@ -145,6 +148,10 @@ export default {
     logIN(){
       this.logInbutton = 'Processing ...';
       this. TypeOfAccount();
+      this.loginto();
+    },
+
+    loginto(){
       if(this.userName && this.passWord){
         firebase.auth().signInWithEmailAndPassword(this.userName, this.passWord).then(user => {
           if(this.accountType == "Traffic" && this.accountStatus == 'Active'){
@@ -156,7 +163,7 @@ export default {
           else{
           this.logInbutton = 'LogIn';
           this.title= 'Connection bloked with your account!',
-          this.alertMessage.message = 'This account is either it is blocked or something change made to it, So please contact the admin!';
+          this.alertMessage.message = 'Seems a connection is lost please try again! But if not work it means something change is made to it, So contact the admin!';
           this.showModal();
           }
         }).catch(err =>{

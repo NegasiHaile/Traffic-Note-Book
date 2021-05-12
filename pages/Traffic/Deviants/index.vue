@@ -6,6 +6,9 @@
 
 <script>
     export default {
+        head:{
+         title: 'Deviants List - Traffic Note Book'
+         },
         
     }
 </script>

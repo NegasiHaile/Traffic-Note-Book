@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid mt-5">
+  <div class="container-fluid" style="margin-top: -45px;">
      <br />
       <div class="d-flex justify-content-center">
         <div class="col-12 col-md-8">
@@ -136,6 +136,9 @@
 import firebase from 'firebase/app'
 
 export default {
+  head: {
+      title: 'Admin Area-Traffic-Note-Book'
+  },
     data(){
         return{
             Traffics: [],
