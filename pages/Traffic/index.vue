@@ -130,7 +130,24 @@
             <div class="card-body">
               <p>
                 For everything that you are doing with this application is been caught in the system,
-                 So be careful about what you are recording, and then you will be asked for that by the administrator.
+                 So be careful about what you are recording, and then you will be asked for that by 
+                 the administrator. Evident explaination is required for every records you do.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 mt-3">
+          <div class="card shadow-sm">
+            <div class="card-header bg-secondary">
+              <div class="d-flex justify-content-center">
+                <p class="text-light">Keep records privately </p>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>
+                We need you to take care of the property of this application privately. 
+                you have got authorization to use this application alone. It's strictly forbidden 
+                to let anybody see any record using your authorization.
               </p>
             </div>
           </div>
