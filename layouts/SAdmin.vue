@@ -32,7 +32,7 @@
             <template #button-content>
               <em>Account</em>
             </template>
-            <b-dropdown-item><nuxt-link class="nav-item" :to="`/SAdmin/Admins/${user.email}`">Profile</nuxt-link> </b-dropdown-item>
+            <b-dropdown-item><nuxt-link class="nav-item" :to="`/SAdmin/Admins/${this.user.email}`">Profile</nuxt-link> </b-dropdown-item>
             <b-dropdown-item to="/SAdmin/ChangePassword">Change password</b-dropdown-item
             >
             <li><hr class="dropdown-divider" /></li>
@@ -73,7 +73,9 @@ export default {
     loggedInUser(){
       firebase.auth().onAuthStateChanged(user =>{
         this.user = user;
-        this.fetchLogeduserInfo()
+        if(this.user != null){
+          this.fetchLogeduserInfo()
+        }
         // console.log(this.adminLevel)
       })
     },
