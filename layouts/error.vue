@@ -6,7 +6,7 @@
           <h1 class="text-light" v-if="error.statusCode === 404">
         {{ error.statusCode }} Page not found
       </h1>
-      <h1 class="text-light"  v-else>An error occurred 
+      <h1 class="text-light"  v-else>Something went worng, An error occurred!
         
       </h1>
 
