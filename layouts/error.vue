@@ -11,8 +11,8 @@
       </h1>
 
       <div class="d-flex justify-content-center mt-4">
-      <NuxtLink to="/" class="btn btn-sm btn-danger"
-        >Back to login page</NuxtLink
+      <nuxt-link to="/" class="btn btn-sm btn-danger"
+        >Back to login page</nuxt-link
       >
     </div>
     </div>
