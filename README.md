@@ -10,7 +10,7 @@
 
 # Actors: Administrators and traffics
 
-## Adminstrator will give authorization to traffics and they access the system.
+## Administrator will give the authorization to traffics and they can access the applocation.
 ## And Traffics can use it as their notebook and more
 
 This project is targeted at what traffics can do with the hard notebook they use to record violations and crimes. And instead of using that notebook, just they can have a digital one in this application and they can work everything simply and effectively.
