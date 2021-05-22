@@ -1,3 +1,4 @@
+// shows the root of the project is in this directory
 {
   "compilerOptions": {
     "baseUrl": ".",
